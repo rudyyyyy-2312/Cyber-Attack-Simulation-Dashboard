@@ -1,0 +1,497 @@
+/* ============================================================
+   CYBER DEFENSE COMMAND CENTER — Custom Styles
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;600;700&display=swap');
+
+/* ── Root Variables ─────────────────────────────────────── */
+:root {
+  --cyan:   #00f5ff;
+  --purple: #bf00ff;
+  --blue:   #0066ff;
+  --red:    #ff003c;
+  --green:  #00ff88;
+  --dark:   #020810;
+  --card:   rgba(0, 245, 255, 0.04);
+  --border: rgba(0, 245, 255, 0.15);
+}
+
+/* ── Base ────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--dark);
+  color: #c8e8f0;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 16px;
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: #010508; }
+::-webkit-scrollbar-thumb { background: var(--cyan); border-radius: 3px; }
+
+/* ── Typography ─────────────────────────────────────────── */
+.font-orbitron { font-family: 'Orbitron', monospace; }
+.font-mono     { font-family: 'Share Tech Mono', monospace; }
+
+/* ── Glows ───────────────────────────────────────────────── */
+.glow-cyan   { text-shadow: 0 0 8px var(--cyan),  0 0 20px var(--cyan),  0 0 40px var(--cyan); }
+.glow-purple { text-shadow: 0 0 8px var(--purple), 0 0 20px var(--purple); }
+.glow-red    { text-shadow: 0 0 8px var(--red),   0 0 20px var(--red); }
+.glow-green  { text-shadow: 0 0 8px var(--green),  0 0 20px var(--green); }
+
+.box-glow-cyan   { box-shadow: 0 0 15px rgba(0,245,255,0.3),  inset 0 0 15px rgba(0,245,255,0.05); }
+.box-glow-purple { box-shadow: 0 0 15px rgba(191,0,255,0.3),  inset 0 0 15px rgba(191,0,255,0.05); }
+.box-glow-red    { box-shadow: 0 0 15px rgba(255,0,60,0.35),  inset 0 0 15px rgba(255,0,60,0.06); }
+.box-glow-green  { box-shadow: 0 0 15px rgba(0,255,136,0.3),  inset 0 0 15px rgba(0,255,136,0.05); }
+
+/* ── Glassmorphism Card ──────────────────────────────────── */
+.glass-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+}
+.glass-card:hover {
+  border-color: var(--cyan);
+  box-shadow: 0 0 25px rgba(0,245,255,0.2), inset 0 0 20px rgba(0,245,255,0.04);
+  transform: translateY(-3px);
+}
+
+/* ── Loading Screen ──────────────────────────────────────── */
+#loader {
+  position: fixed; inset: 0; z-index: 9999;
+  background: #000;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  transition: opacity 0.8s ease;
+}
+#loader.hidden { opacity: 0; pointer-events: none; }
+
+.loader-ring {
+  width: 80px; height: 80px;
+  border: 3px solid rgba(0,245,255,0.1);
+  border-top-color: var(--cyan);
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+.loader-text {
+  font-family: 'Orbitron', monospace;
+  font-size: 0.75rem;
+  color: var(--cyan);
+  letter-spacing: 4px;
+  margin-top: 1.5rem;
+  animation: blink 1.2s step-end infinite;
+}
+
+/* ── Matrix Canvas ───────────────────────────────────────── */
+#matrix-canvas {
+  position: fixed; top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0; opacity: 0.18;
+  pointer-events: none;
+}
+
+/* ── Particle Canvas ─────────────────────────────────────── */
+#particle-canvas {
+  position: fixed; top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 1; opacity: 0.5;
+  pointer-events: none;
+}
+
+/* ── Navbar ──────────────────────────────────────────────── */
+#navbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  padding: 0.75rem 2rem;
+  background: rgba(2, 8, 16, 0.85);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(16px);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-logo {
+  font-family: 'Orbitron', monospace;
+  font-size: 1rem; font-weight: 700;
+  color: var(--cyan);
+  letter-spacing: 2px;
+  text-shadow: 0 0 10px var(--cyan);
+}
+.nav-link {
+  font-family: 'Orbitron', monospace;
+  font-size: 0.65rem;
+  color: rgba(200,232,240,0.7);
+  letter-spacing: 1.5px;
+  text-decoration: none;
+  padding: 0.4rem 0.75rem;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  transition: all 0.25s;
+}
+.nav-link:hover {
+  color: var(--cyan);
+  border-color: var(--cyan);
+  text-shadow: 0 0 8px var(--cyan);
+}
+.nav-status {
+  display: flex; align-items: center; gap: 0.5rem;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.7rem; color: var(--green);
+}
+.status-dot {
+  width: 8px; height: 8px;
+  background: var(--green);
+  border-radius: 50%;
+  animation: pulse-green 1.5s ease-in-out infinite;
+  box-shadow: 0 0 8px var(--green);
+}
+
+/* ── Hero Section ────────────────────────────────────────── */
+#hero {
+  position: relative; z-index: 2;
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center; padding: 2rem;
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  border: 1px solid var(--cyan);
+  border-radius: 20px;
+  padding: 0.3rem 1rem;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--cyan);
+  letter-spacing: 3px;
+  margin-bottom: 2rem;
+  animation: borderGlow 2s ease-in-out infinite alternate;
+}
+.hero-title {
+  font-family: 'Orbitron', monospace;
+  font-size: clamp(2rem, 6vw, 4.5rem);
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: 4px;
+  background: linear-gradient(135deg, var(--cyan) 0%, #fff 40%, var(--purple) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 1.25rem;
+  animation: heroFade 1s ease forwards;
+}
+.hero-sub {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: clamp(1rem, 2.5vw, 1.35rem);
+  color: rgba(200,232,240,0.75);
+  letter-spacing: 2px;
+  margin-bottom: 2.5rem;
+  max-width: 600px;
+}
+.hero-stats {
+  display: flex; gap: 2.5rem; justify-content: center;
+  flex-wrap: wrap; margin-bottom: 2.5rem;
+}
+.hero-stat { text-align: center; }
+.hero-stat-num {
+  font-family: 'Orbitron', monospace;
+  font-size: 1.8rem; font-weight: 700;
+  color: var(--cyan);
+  text-shadow: 0 0 15px var(--cyan);
+}
+.hero-stat-label {
+  font-size: 0.7rem; letter-spacing: 2px;
+  color: rgba(200,232,240,0.5);
+  text-transform: uppercase;
+}
+
+/* ── CTA Buttons ─────────────────────────────────────────── */
+.btn-cyber {
+  font-family: 'Orbitron', monospace;
+  font-size: 0.72rem; font-weight: 700;
+  letter-spacing: 2px;
+  padding: 0.75rem 2rem;
+  border-radius: 4px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  transition: all 0.25s;
+  position: relative; overflow: hidden;
+}
+.btn-cyber::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.4s;
+}
+.btn-cyber:hover::before { transform: translateX(100%); }
+
+.btn-primary {
+  background: linear-gradient(135deg, rgba(0,245,255,0.15), rgba(0,102,255,0.15));
+  border: 1px solid var(--cyan);
+  color: var(--cyan);
+}
+.btn-primary:hover {
+  background: linear-gradient(135deg, rgba(0,245,255,0.3), rgba(0,102,255,0.25));
+  box-shadow: 0 0 25px rgba(0,245,255,0.4);
+}
+.btn-secondary {
+  background: transparent;
+  border: 1px solid rgba(200,232,240,0.3);
+  color: rgba(200,232,240,0.8);
+}
+.btn-secondary:hover {
+  border-color: var(--purple);
+  color: var(--purple);
+  box-shadow: 0 0 20px rgba(191,0,255,0.3);
+}
+
+/* ── Section Titles ──────────────────────────────────────── */
+.section-header {
+  display: flex; align-items: center; gap: 1rem;
+  margin-bottom: 2rem;
+}
+.section-line {
+  flex: 1; height: 1px;
+  background: linear-gradient(90deg, var(--cyan), transparent);
+}
+.section-title {
+  font-family: 'Orbitron', monospace;
+  font-size: clamp(1rem, 2.5vw, 1.4rem);
+  font-weight: 700; letter-spacing: 3px;
+  color: var(--cyan);
+  text-shadow: 0 0 15px rgba(0,245,255,0.5);
+}
+.section-tag {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.65rem; color: var(--cyan);
+  border: 1px solid var(--cyan); border-radius: 3px;
+  padding: 0.2rem 0.5rem; letter-spacing: 1px;
+}
+
+/* ── Live Feed ───────────────────────────────────────────── */
+.feed-row {
+  display: grid;
+  grid-template-columns: 1.4fr 1.5fr 0.8fr 1fr 1fr;
+  gap: 0.5rem; align-items: center;
+  padding: 0.6rem 1rem;
+  border-bottom: 1px solid rgba(0,245,255,0.05);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.72rem;
+  animation: feedSlide 0.4s ease;
+  transition: background 0.2s;
+}
+.feed-row:hover { background: rgba(0,245,255,0.04); }
+
+.severity-badge {
+  display: inline-block;
+  padding: 0.15rem 0.55rem;
+  border-radius: 3px;
+  font-size: 0.62rem; font-weight: 700; letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.sev-critical { background: rgba(255,0,60,0.2);  color: #ff5577; border: 1px solid rgba(255,0,60,0.4); }
+.sev-high     { background: rgba(255,140,0,0.2); color: #ffaa33; border: 1px solid rgba(255,140,0,0.4); }
+.sev-medium   { background: rgba(255,220,0,0.15);color: #ffd700; border: 1px solid rgba(255,220,0,0.3); }
+.sev-low      { background: rgba(0,255,136,0.1); color: var(--green); border: 1px solid rgba(0,255,136,0.3); }
+
+.warning-blink { animation: blink 0.8s step-end infinite; color: var(--red); }
+
+/* ── World Map ───────────────────────────────────────────── */
+#map-canvas { border-radius: 10px; width: 100%; }
+
+.map-legend-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.72rem; }
+.map-legend-dot  { width: 10px; height: 10px; border-radius: 50%; }
+
+/* ── Circular Progress ───────────────────────────────────── */
+.circular-progress {
+  position: relative; width: 90px; height: 90px;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 0.75rem;
+}
+.circular-progress svg { position: absolute; top: 0; left: 0; transform: rotate(-90deg); }
+.circular-progress .track { fill: none; stroke: rgba(0,245,255,0.08); stroke-width: 5; }
+.circular-progress .prog  { fill: none; stroke-width: 5; stroke-linecap: round;
+  transition: stroke-dashoffset 1.5s ease; }
+.circ-val {
+  font-family: 'Orbitron', monospace;
+  font-size: 1.1rem; font-weight: 700;
+}
+
+/* ── AI Threat Bars ──────────────────────────────────────── */
+.threat-bar-wrap { margin-bottom: 1.2rem; }
+.threat-bar-label {
+  display: flex; justify-content: space-between;
+  font-family: 'Share Tech Mono', monospace; font-size: 0.72rem;
+  margin-bottom: 0.35rem;
+}
+.threat-bar-track {
+  height: 6px; background: rgba(255,255,255,0.07);
+  border-radius: 3px; overflow: hidden;
+  position: relative;
+}
+.threat-bar-fill {
+  height: 100%; border-radius: 3px;
+  position: relative;
+  transition: width 1.8s cubic-bezier(0.4,0,0.2,1);
+}
+.threat-bar-fill::after {
+  content: '';
+  position: absolute; right: 0; top: -2px;
+  width: 12px; height: 10px;
+  background: inherit;
+  border-radius: 50%;
+  filter: blur(4px);
+}
+
+/* ── Terminal ────────────────────────────────────────────── */
+#terminal {
+  background: rgba(0,0,0,0.7);
+  border: 1px solid rgba(0,245,255,0.2);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 0 30px rgba(0,245,255,0.1);
+}
+.terminal-header {
+  background: rgba(0,245,255,0.08);
+  padding: 0.6rem 1rem;
+  display: flex; align-items: center; gap: 0.5rem;
+  border-bottom: 1px solid rgba(0,245,255,0.15);
+}
+.terminal-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+}
+.terminal-body {
+  padding: 1rem;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.78rem;
+  min-height: 260px; max-height: 340px;
+  overflow-y: auto;
+  color: var(--green);
+}
+.terminal-line { margin-bottom: 0.3rem; line-height: 1.5; }
+.terminal-line.cmd { color: var(--cyan); }
+.terminal-line.err { color: var(--red); }
+.terminal-line.warn { color: #ffaa33; }
+
+.terminal-input-row {
+  display: flex; align-items: center; gap: 0.5rem;
+  padding: 0.65rem 1rem;
+  border-top: 1px solid rgba(0,245,255,0.12);
+  background: rgba(0,0,0,0.5);
+}
+.terminal-prompt { color: var(--cyan); font-family: 'Share Tech Mono', monospace; font-size: 0.78rem; }
+#terminal-input {
+  flex: 1; background: transparent; border: none; outline: none;
+  font-family: 'Share Tech Mono', monospace; font-size: 0.78rem;
+  color: var(--green); caret-color: var(--cyan);
+}
+
+/* ── Radar ───────────────────────────────────────────────── */
+#radar-canvas { display: block; margin: 0 auto; }
+
+/* ── Neon Line Graph ─────────────────────────────────────── */
+#traffic-canvas { width: 100%; border-radius: 6px; }
+
+/* ── Siren ───────────────────────────────────────────────── */
+.siren-ring {
+  width: 18px; height: 18px;
+  border: 2px solid var(--red);
+  border-radius: 50%;
+  animation: sirenPulse 1s ease-out infinite;
+  position: absolute;
+}
+.siren-ring:nth-child(2) { animation-delay: 0.33s; }
+.siren-ring:nth-child(3) { animation-delay: 0.66s; }
+.siren-dot {
+  width: 10px; height: 10px;
+  background: var(--red);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--red);
+  position: relative; z-index: 1;
+}
+.siren-wrap {
+  position: relative; width: 40px; height: 40px;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* ── Footer ──────────────────────────────────────────────── */
+footer {
+  position: relative; z-index: 2;
+  border-top: 1px solid var(--border);
+  padding: 2.5rem 2rem;
+  text-align: center;
+  background: rgba(2,8,16,0.9);
+}
+.footer-brand {
+  font-family: 'Orbitron', monospace;
+  font-size: 0.75rem; letter-spacing: 4px;
+  color: var(--cyan); text-shadow: 0 0 10px var(--cyan);
+  margin-bottom: 0.5rem;
+}
+.footer-copy {
+  font-size: 0.72rem; color: rgba(200,232,240,0.35);
+  letter-spacing: 1px;
+}
+.social-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: rgba(200,232,240,0.5);
+  text-decoration: none;
+  transition: all 0.25s;
+  font-size: 1rem;
+}
+.social-btn:hover {
+  border-color: var(--cyan);
+  color: var(--cyan);
+  box-shadow: 0 0 14px rgba(0,245,255,0.35);
+  transform: translateY(-3px);
+}
+
+/* ── Utility Sections ────────────────────────────────────── */
+section { position: relative; z-index: 2; }
+
+.divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+  margin: 0 2rem;
+}
+
+/* ── Keyframes ───────────────────────────────────────────── */
+@keyframes spin        { to { transform: rotate(360deg); } }
+@keyframes blink       { 50% { opacity: 0; } }
+@keyframes pulse-green { 0%,100%{box-shadow:0 0 5px var(--green);} 50%{box-shadow:0 0 15px var(--green);} }
+@keyframes borderGlow  { from{box-shadow:0 0 5px rgba(0,245,255,0.3);} to{box-shadow:0 0 20px rgba(0,245,255,0.6);} }
+@keyframes heroFade    { from{opacity:0;transform:translateY(30px);} to{opacity:1;transform:translateY(0);} }
+@keyframes feedSlide   { from{opacity:0;transform:translateX(-20px);} to{opacity:1;transform:translateX(0);} }
+@keyframes sirenPulse  { 0%{transform:scale(1);opacity:1;} 100%{transform:scale(2.5);opacity:0;} }
+@keyframes scanLine    { 0%{top:-10%;} 100%{top:110%;} }
+
+/* Scan line overlay on AI section */
+.scan-overlay {
+  position: absolute; inset: 0; border-radius: 12px;
+  overflow: hidden; pointer-events: none;
+}
+.scan-overlay::after {
+  content: '';
+  position: absolute; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+  opacity: 0.6;
+  animation: scanLine 3s linear infinite;
+}
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .feed-row { grid-template-columns: 1fr 1fr; gap: 0.4rem; font-size: 0.65rem; }
+  .feed-row > *:nth-child(4),
+  .feed-row > *:nth-child(5) { display: none; }
+  #navbar nav { display: none; }
+}

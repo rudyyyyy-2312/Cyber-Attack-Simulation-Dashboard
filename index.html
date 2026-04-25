@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Cyber Defense Command Center — Real-Time Threat Detection & Attack Simulation Dashboard"/>
+  <title>CDCC — Cyber Defense Command Center</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: {
+        colors: { cyber: { cyan:'#00f5ff', purple:'#bf00ff', blue:'#0066ff', red:'#ff003c', green:'#00ff88', dark:'#020810' } }
+      }}
+    };
+  </script>
+
+  <!-- Custom styles -->
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body class="bg-[#020810] text-slate-300 antialiased">
+
+  <!-- ── Loading Screen ──────────────────────────────────── -->
+  <div id="loader">
+    <div class="loader-ring"></div>
+    <p class="loader-text">INITIALIZING SYSTEMS...</p>
+  </div>
+
+  <!-- ── Background Canvases ────────────────────────────── -->
+  <canvas id="matrix-canvas"></canvas>
+  <canvas id="particle-canvas"></canvas>
+
+  <!-- ── Navbar ──────────────────────────────────────────── -->
+  <header id="navbar">
+    <div class="nav-logo">⬡ CDCC</div>
+    <nav class="hidden md:flex gap-1">
+      <a href="#hero"     class="nav-link">HOME</a>
+      <a href="#feed"     class="nav-link">LIVE FEED</a>
+      <a href="#map"      class="nav-link">GLOBAL MAP</a>
+      <a href="#monitor"  class="nav-link">MONITOR</a>
+      <a href="#ai"       class="nav-link">AI ANALYSIS</a>
+      <a href="#terminal" class="nav-link">TERMINAL</a>
+    </nav>
+    <div class="nav-status">
+      <span class="status-dot"></span>
+      <span id="live-clock" class="font-mono text-xs"></span>
+    </div>
+  </header>
+
+  <!-- ══════════════════════════════════════════════════════
+       SECTION 1 — HERO
+  ══════════════════════════════════════════════════════════ -->
+  <section id="hero">
+    <div class="hero-badge">
+      <span class="status-dot"></span>
+      SYSTEM ONLINE — THREAT LEVEL: CRITICAL
+    </div>
+
+    <h1 class="hero-title">
+      CYBER DEFENSE<br/>COMMAND CENTER
+    </h1>
+
+    <p class="hero-sub">
+      Real-Time Threat Detection &amp; Attack Simulation
+    </p>
+
+    <!-- Live stats -->
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-num" id="stat-attacks">0</div>
+        <div class="hero-stat-label">Attacks Detected</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num" id="stat-blocked">0%</div>
+        <div class="hero-stat-label">Threats Blocked</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num" id="stat-nodes">0</div>
+        <div class="hero-stat-label">Active Nodes</div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="flex gap-4 flex-wrap justify-center">
+      <a href="#feed" class="btn-cyber btn-primary">
+        ⚡ LIVE FEED
+      </a>
+      <a href="#terminal" class="btn-cyber btn-secondary">
+        ▶ OPEN TERMINAL
+      </a>
+    </div>
+
+    <!-- Scroll cue -->
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-40">
+      <span class="font-mono text-xs tracking-widest">SCROLL</span>
+      <div class="w-px h-12 bg-gradient-to-b from-cyan-400 to-transparent animate-pulse"></div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ══════════════════════════════════════════════════════
+       SECTION 2 — LIVE ATTACK FEED
+  ══════════════════════════════════════════════════════════ -->
+  <section id="feed" class="px-4 md:px-10 py-16 max-w-7xl mx-auto">
+    <div class="section-header">
+      <div class="section-line"></div>
+      <h2 class="section-title">LIVE ATTACK FEED</h2>
+      <div class="section-tag">REAL-TIME</div>
+      <div class="section-line" style="background:linear-gradient(90deg,transparent,var(--cyan))"></div>
+    </div>
+
+    <!-- Alert bar -->
+    <div class="flex items-center gap-3 mb-5 px-4 py-2 rounded-md bg-red-950/30 border border-red-700/40">
+      <div class="siren-wrap">
+        <div class="siren-ring"></div>
+        <div class="siren-ring"></div>
+        <div class="siren-ring"></div>
+        <div class="siren-dot"></div>
+      </div>
+      <span class="font-mono text-xs text-red-400 tracking-wider">
+        CRITICAL ALERT — <span id="attack-counter" class="text-red-300 font-bold">0</span> ATTACKS LOGGED THIS SESSION
+      </span>
+    </div>
+
+    <!-- Feed table -->
+    <div class="glass-card overflow-hidden">
+      <table class="w-full">
+        <thead>
+          <tr class="feed-row border-b border-cyan-900/30">
+            <th class="text-left text-cyan-500 font-mono text-xs tracking-widest py-3">IP ADDRESS</th>
+            <th class="text-left text-cyan-500 font-mono text-xs tracking-widest">THREAT TYPE</th>
+            <th class="text-left text-cyan-500 font-mono text-xs tracking-widest">SEVERITY</th>
+            <th class="text-left text-cyan-500 font-mono text-xs tracking-widest">ORIGIN</th>
+            <th class="text-left text-cyan-500 font-mono text-xs tracking-widest">TIME</th>
+          </tr>
+        </thead>
+        <tbody id="feed-tbody" class="divide-y divide-cyan-900/10"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ══════════════════════════════════════════════════════
+       SECTION 3 — GLOBAL THREAT MAP
+  ══════════════════════════════════════════════════════════ -->
+  <section id="map" class="px-4 md:px-10 py-16 max-w-7xl mx-auto">
+    <div class="section-header">
+      <div class="section-line"></div>
+      <h2 class="section-title">GLOBAL THREAT MAP</h2>
+      <div class="section-tag">LIVE</div>
+      <div class="section-line" style="background:linear-gradient(90deg,transparent,var(--cyan))"></div>
+    </div>
+
+    <div class="glass-card p-4 box-glow-cyan">
+      <canvas id="map-canvas" height="340"></canvas>
+      <!-- Legend -->
+      <div class="flex flex-wrap gap-4 mt-4 px-2">
+        <div class="map-legend-item"><div class="map-legend-dot" style="background:#ff003c;box-shadow:0 0 6px #ff003c"></div><span class="font-mono text-xs text-slate-400">Critical Attack</span></div>
+        <div class="map-legend-item"><div class="map-legend-dot" style="background:#ffaa33;box-shadow:0 0 6px #ffaa33"></div><span class="font-mono text-xs text-slate-400">High Severity</span></div>
+        <div class="map-legend-item"><div class="map-legend-dot" style="background:#bf00ff;box-shadow:0 0 6px #bf00ff"></div><span class="font-mono text-xs text-slate-400">Medium</span></div>
+        <div class="map-legend-item"><div class="map-legend-dot" style="background:#00f5ff;box-shadow:0 0 6px #00f5ff"></div><span class="font-mono text-xs text-slate-400">Monitored Node</span></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ══════════════════════════════════════════════════════
+       SECTION 4 — SYSTEM MONITORING
+  ══════════════════════════════════════════════════════════ -->
+  <section id="monitor" class="px-4 md:px-10 py-16 max-w-7xl mx-auto">
+    <div class="section-header">
+      <div class="section-line"></div>
+      <h2 class="section-title">SYSTEM MONITOR</h2>
+      <div class="section-tag">METRICS</div>
+      <div class="section-line" style="background:linear-gradient(90deg,transparent,var(--cyan))"></div>
+    </div>
+
+    <!-- Circular progress cards -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
+      <!-- CPU -->
+      <div class="glass-card p-4 text-center">
+        <p class="font-mono text-xs text-cyan-500 tracking-widest mb-2">CPU</p>
+        <div class="circular-progress" id="prog-cpu"></div>
+        <p class="text-xs text-slate-500 mt-1">Processing Load</p>
+      </div>
+      <!-- RAM -->
+      <div class="glass-card p-4 text-center">
+        <p class="font-mono text-xs text-purple-400 tracking-widest mb-2">RAM</p>
+        <div class="circular-progress" id="prog-mem"></div>
+        <p class="text-xs text-slate-500 mt-1">Memory Usage</p>
+      </div>
+      <!-- Firewall -->
+      <div class="glass-card p-4 text-center">
+        <p class="font-mono text-xs text-green-400 tracking-widest mb-2">FIREWALL</p>
+        <div class="circular-progress" id="prog-fw"></div>
+        <p class="text-xs text-slate-500 mt-1">Rule Compliance</p>
+      </div>
+      <!-- Network -->
+      <div class="glass-card p-4 text-center">
+        <p class="font-mono text-xs text-blue-400 tracking-widest mb-2">NETWORK</p>
+        <div class="circular-progress" id="prog-net"></div>
+        <p class="text-xs text-slate-500 mt-1">Bandwidth Used</p>
+      </div>
+      <!-- Server -->
+      <div class="glass-card p-4 text-center">
+        <p class="font-mono text-xs text-cyan-500 tracking-widest mb-2">SERVER</p>
+        <div class="circular-progress" id="prog-srv"></div>
+        <p class="text-xs text-slate-500 mt-1">Health Score</p>
+      </div>
+      <!-- Intrusion -->
+      <div class="glass-card p-4 text-center box-glow-red">
+        <p class="font-mono text-xs text-red-400 tracking-widest mb-2">INTRUSION</p>
+        <div class="circular-progress" id="prog-int"></div>
+        <p class="text-xs text-slate-500 mt-1">Attempt Rate</p>
+      </div>
+    </div>
+
+    <!-- Bottom row: traffic graph + radar + intrusion counter -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <!-- Traffic Graph -->
+      <div class="glass-card p-5 lg:col-span-2">
+        <p class="font-orbitron text-xs text-cyan-400 tracking-widest mb-3">NETWORK TRAFFIC — REAL TIME</p>
+        <canvas id="traffic-canvas" height="120"></canvas>
+      </div>
+
+      <!-- Radar + Intrusion -->
+      <div class="flex flex-col gap-4">
+        <div class="glass-card p-5 text-center flex-1">
+          <p class="font-orbitron text-xs text-cyan-400 tracking-widest mb-3">RADAR SCANNER</p>
+          <canvas id="radar-canvas" width="180" height="180"></canvas>
+        </div>
+        <div class="glass-card p-5 text-center box-glow-red">
+          <p class="font-mono text-xs text-red-400 tracking-widest mb-2">INTRUSION ATTEMPTS</p>
+          <p id="intrusion-count" class="font-orbitron text-3xl font-bold text-red-400" style="text-shadow:0 0 15px #ff003c">2,847</p>
+          <p class="text-xs text-slate-500 mt-1">Total Blocked</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ══════════════════════════════════════════════════════
+       SECTION 5 — AI THREAT ANALYZER
+  ══════════════════════════════════════════════════════════ -->
+  <section id="ai" class="px-4 md:px-10 py-16 max-w-7xl mx-auto">
+    <div class="section-header">
+      <div class="section-line"></div>
+      <h2 class="section-title">AI THREAT ANALYZER</h2>
+      <div class="section-tag">NEURAL NET</div>
+      <div class="section-line" style="background:linear-gradient(90deg,transparent,var(--cyan))"></div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <!-- Threat bars -->
+      <div class="glass-card p-6 relative">
+        <div class="scan-overlay"></div>
+        <p class="font-orbitron text-xs text-cyan-400 tracking-widest mb-5">THREAT PROBABILITY ENGINE</p>
+        <div id="bar-malware"></div>
+        <div id="bar-ddos"></div>
+        <div id="bar-vuln"></div>
+        <div id="bar-packet"></div>
+        <div id="bar-apt"></div>
+      </div>
+
+      <!-- AI status panel -->
+      <div class="glass-card p-6 box-glow-purple">
+        <p class="font-orbitron text-xs text-purple-400 tracking-widest mb-5">AI ENGINE STATUS</p>
+        <div class="space-y-3">
+          <!-- status rows -->
+          <div class="flex justify-between items-center border-b border-purple-900/30 pb-2">
+            <span class="font-mono text-xs text-slate-400">Model</span>
+            <span class="font-mono text-xs text-purple-300">DeepShield v9.3</span>
+          </div>
+          <div class="flex justify-between items-center border-b border-purple-900/30 pb-2">
+            <span class="font-mono text-xs text-slate-400">Training Samples</span>
+            <span class="font-mono text-xs text-cyan-300">2.4 Billion</span>
+          </div>
+          <div class="flex justify-between items-center border-b border-purple-900/30 pb-2">
+            <span class="font-mono text-xs text-slate-400">Detection Accuracy</span>
+            <span class="font-mono text-xs text-green-400">99.7%</span>
+          </div>
+          <div class="flex justify-between items-center border-b border-purple-900/30 pb-2">
+            <span class="font-mono text-xs text-slate-400">False Positive Rate</span>
+            <span class="font-mono text-xs text-green-400">0.03%</span>
+          </div>
+          <div class="flex justify-between items-center border-b border-purple-900/30 pb-2">
+            <span class="font-mono text-xs text-slate-400">Response Time</span>
+            <span class="font-mono text-xs text-cyan-300">4.2ms</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="font-mono text-xs text-slate-400">Status</span>
+            <span class="font-mono text-xs text-green-400 flex items-center gap-2">
+              <span class="status-dot" style="width:6px;height:6px"></span>OPERATIONAL
+            </span>
+          </div>
+        </div>
+
+        <!-- Holographic divider -->
+        <div class="mt-5 pt-4 border-t border-purple-900/40">
+          <p class="font-mono text-xs text-slate-500 mb-3">ACTIVE COUNTERMEASURES</p>
+          <div class="flex flex-wrap gap-2">
+            <span class="px-2 py-1 rounded text-xs font-mono border border-purple-700/50 text-purple-300 bg-purple-900/20">HEURISTIC SCAN</span>
+            <span class="px-2 py-1 rounded text-xs font-mono border border-cyan-700/50 text-cyan-300 bg-cyan-900/20">DEEP PACKET</span>
+            <span class="px-2 py-1 rounded text-xs font-mono border border-green-700/50 text-green-300 bg-green-900/20">BEHAVIORAL AI</span>
+            <span class="px-2 py-1 rounded text-xs font-mono border border-red-700/50 text-red-300 bg-red-900/20">ZERO-DAY BLOCK</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ══════════════════════════════════════════════════════
+       SECTION 6 — CYBER TERMINAL
+  ══════════════════════════════════════════════════════════ -->
+  <section id="terminal" class="px-4 md:px-10 py-16 max-w-5xl mx-auto">
+    <div class="section-header">
+      <div class="section-line"></div>
+      <h2 class="section-title">CYBER TERMINAL</h2>
+      <div class="section-tag">SECURE SHELL</div>
+      <div class="section-line" style="background:linear-gradient(90deg,transparent,var(--cyan))"></div>
+    </div>
+
+    <div id="terminal">
+      <!-- Window chrome -->
+      <div class="terminal-header">
+        <div class="terminal-dot" style="background:#ff5f57"></div>
+        <div class="terminal-dot" style="background:#febc2e"></div>
+        <div class="terminal-dot" style="background:#28c840"></div>
+        <span class="font-mono text-xs text-slate-500 ml-3">root@cdcc — secure-shell</span>
+      </div>
+
+      <!-- Output -->
+      <div class="terminal-body" id="terminal-body">
+        <div class="terminal-line">Booting CDCC Terminal...</div>
+      </div>
+
+      <!-- Input -->
+      <div class="terminal-input-row">
+        <span class="terminal-prompt">root@cdcc:~$&nbsp;</span>
+        <input id="terminal-input" type="text" autocomplete="off" spellcheck="false"
+               placeholder="Type a command (try: help)"/>
+      </div>
+    </div>
+
+    <!-- Command quick-buttons -->
+    <div class="flex flex-wrap gap-3 mt-4">
+      <button onclick="document.getElementById('terminal-input').value='scan network';document.getElementById('terminal-input').dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true}))"
+              class="btn-cyber btn-primary text-xs py-2 px-4">scan network</button>
+      <button onclick="document.getElementById('terminal-input').value='analyze threat';document.getElementById('terminal-input').dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true}))"
+              class="btn-cyber btn-secondary text-xs py-2 px-4">analyze threat</button>
+      <button onclick="document.getElementById('terminal-input').value='detect malware';document.getElementById('terminal-input').dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true}))"
+              class="btn-cyber btn-secondary text-xs py-2 px-4">detect malware</button>
+      <button onclick="document.getElementById('terminal-input').value='status';document.getElementById('terminal-input').dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true}))"
+              class="btn-cyber btn-secondary text-xs py-2 px-4">status</button>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ══════════════════════════════════════════════════════
+       SECTION 7 — C++ BACKEND INFO
+  ══════════════════════════════════════════════════════════ -->
+  <section class="px-4 md:px-10 py-16 max-w-7xl mx-auto">
+    <div class="section-header">
+      <div class="section-line"></div>
+      <h2 class="section-title">C++ BACKEND ENGINE</h2>
+      <div class="section-tag">OOP / SYSTEMS</div>
+      <div class="section-line" style="background:linear-gradient(90deg,transparent,var(--cyan))"></div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="glass-card p-5 box-glow-cyan">
+        <div class="text-2xl mb-2">⚡</div>
+        <p class="font-orbitron text-xs text-cyan-400 tracking-widest mb-2">THREAT QUEUE</p>
+        <p class="text-sm text-slate-400">Priority queue (std::priority_queue) handles incoming attack events ranked by severity in O(log n).</p>
+      </div>
+      <div class="glass-card p-5 box-glow-purple">
+        <div class="text-2xl mb-2">🔍</div>
+        <p class="font-orbitron text-xs text-purple-400 tracking-widest mb-2">IP SEARCH</p>
+        <p class="text-sm text-slate-400">Binary search on sorted blacklist of suspicious IPs with unordered_map for O(1) lookups.</p>
+      </div>
+      <div class="glass-card p-5">
+        <div class="text-2xl mb-2">📦</div>
+        <p class="font-orbitron text-xs text-blue-400 tracking-widest mb-2">PACKET INSPECT</p>
+        <p class="text-sm text-slate-400">Struct-based packet parser inspects headers and payloads. Pattern matching against known signatures.</p>
+      </div>
+      <div class="glass-card p-5 box-glow-red">
+        <div class="text-2xl mb-2">📊</div>
+        <p class="font-orbitron text-xs text-red-400 tracking-widest mb-2">SEVERITY SCORE</p>
+        <p class="text-sm text-slate-400">Weighted scoring algorithm combining port, protocol, payload entropy and frequency rate.</p>
+      </div>
+    </div>
+
+    <div class="glass-card p-5 mt-5">
+      <p class="font-orbitron text-xs text-cyan-400 tracking-widest mb-3">HOW TO RUN THE C++ SIMULATOR</p>
+      <div class="bg-black/50 rounded-lg p-4 font-mono text-xs text-green-400 space-y-1">
+        <p><span class="text-slate-500"># Compile (requires g++ / MinGW on Windows)</span></p>
+        <p>g++ backend/Simulator.cpp backend/Analyzer.cpp -o cdcc_sim -std=c++17</p>
+        <p class="mt-2"><span class="text-slate-500"># Run — outputs attack_data.json</span></p>
+        <p>./cdcc_sim</p>
+        <p class="mt-2"><span class="text-slate-500"># The JSON is auto-loaded by the frontend dashboard</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════
+       FOOTER
+  ══════════════════════════════════════════════════════════ -->
+  <footer>
+    <p class="footer-brand">⬡ CYBER DEFENSE COMMAND CENTER</p>
+    <p class="footer-copy mb-4">Powered by Advanced Cyber Intelligence</p>
+    <div class="flex justify-center gap-3 mb-4">
+      <a href="#" class="social-btn" title="GitHub">⌥</a>
+      <a href="#" class="social-btn" title="Twitter">✦</a>
+      <a href="#" class="social-btn" title="LinkedIn">◈</a>
+      <a href="#" class="social-btn" title="Discord">⬡</a>
+    </div>
+    <p class="footer-copy">© 2026 CDCC — All systems operational</p>
+  </footer>
+
+  <!-- ── Main Script ──────────────────────────────────────── -->
+  <script src="js/main.js"></script>
+</body>
+</html>
