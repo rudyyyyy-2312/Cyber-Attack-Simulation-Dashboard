@@ -1,0 +1,35 @@
+# ============================================================
+# Cyber Defense Command Center — .gitignore
+# ============================================================
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor folders
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# C++ compiled output (keep source files, ignore binaries)
+*.o
+*.obj
+*.exe
+*.out
+cdcc_sim
+cdcc_sim.exe
+
+# C++ generated data file (re-generated at runtime)
+attack_data.json
+
+# Node (not used, but just in case)
+node_modules/
+npm-debug.log*
+
+# Vercel local dev cache
+.vercel/
+
+# Logs
+*.log
